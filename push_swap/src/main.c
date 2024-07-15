@@ -50,6 +50,9 @@ static int	*split_arg(char *arg, int *size)
 	i = 0;
 	while (ssplit[i] != NULL)
 	{
+		if (!is_nbr(ssplit[i]) || ft_atol(ssplit[i]) < -2147483648
+			|| ft_atol(ssplit[i]) > 2147483647)
+			return (free(split), free_ssplit(ssplit), put_error(), NULL);
 		split[i] = ft_atoi(ssplit[i]);
 		i++;
 	}
@@ -63,10 +66,7 @@ static int	*validate_and_split(int argc, char **argv, int *size)
 	int		i;
 
 	if (argc == 1)
-	{
-		*size = 0;
-		return (NULL);
-	}
+		return (*size = 0, NULL);
 	if (argc == 2)
 		return (split_arg(argv[1], size));
 	else
@@ -78,6 +78,9 @@ static int	*validate_and_split(int argc, char **argv, int *size)
 		i = argc - 1;
 		while (i > 0)
 		{
+			if (!is_nbr(argv[i]) || ft_atol(argv[i]) < -2147483648
+				|| ft_atol(argv[i]) > 2147483647)
+				return (free(split), put_error(), NULL);
 			split[i - 1] = ft_atoi(argv[i]);
 			i--;
 		}
@@ -87,10 +90,12 @@ static int	*validate_and_split(int argc, char **argv, int *size)
 
 static void	perform_sort(t_stack *stack_a, t_stack *stack_b, int size)
 {
-	if (size == 2 && stack_a->head > stack_a->tail)
+	if (is_sorted(stack_a))
+		return ;
+	else if (size == 2 && stack_a->head > stack_a->tail)
 		swap("sa", stack_a);
 	else if (size == 3)
-		sort_three(stack_a);
+		sort_three(stack_a, 2);
 	else if (size == 4 || size == 5)
 		sort_five(stack_a, stack_b);
 	else
@@ -111,7 +116,7 @@ int	main(int argc, char **argv)
 	if (stack_a == NULL)
 		return (free(split), 1);
 	if (has_duplicates(split, size))
-		return (free_stack(stack_a), free(split), 1);
+		return (free_stack(stack_a), free(split), put_error(), 1);
 	free(split);
 	put_index(stack_a);
 	stack_b = init_stack();

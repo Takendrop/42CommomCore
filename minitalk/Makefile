@@ -5,41 +5,41 @@
 #                                                     +:+ +:+         +:+      #
 #    By: jwozniak <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/19 13:50:49 by jwozniak          #+#    #+#              #
-#    Updated: 2024/04/19 13:50:51 by jwozniak         ###   ########.fr        #
+#    Created: 2024/05/23 16:23:52 by jwozniak          #+#    #+#              #
+#    Updated: 2024/05/23 16:23:54 by jwozniak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= push_swap
 CC		= cc
 CFLAGS		= -Wall -Wextra -Werror -g
+RM		= rm -rf
 LIBFT_DIR	= ./libft
 LIBFT		= $(LIBFT_DIR)/libft.a
-RM		= rm -rf
-SRCS		= main.c node.c actions.c sort.c utils.c error.c
-SRC		= $(addprefix ./src/, $(SRCS))
-OBJ		= $(SRC:.c=.o)
+SRCS		= client.c server.c
+OBJ		= $(SRCS:.c=.o)
 
-all:	$(LIBFT) $(NAME)
+all:	$(LIBFT) client server
 
 $(LIBFT):
-	@make -s -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -L./$(LIBFT_DIR) -lft
+client: client.o $(LIBFT)
+	$(CC) $(CFLAGS) -o client client.o $(LIBFT) -I$(LIBFT_DIR)
 
-$(OBJ):	$(SRC)
-	@$(CC) $(CFLAGS) -c $^ -I$(LIBFT_DIR)
-	@mv *.o src
+server: server.o $(LIBFT)
+	$(CC) $(CFLAGS) -o server server.o $(LIBFT) -I$(LIBFT_DIR)
+
+%.o:	%.c
+	$(CC) $(CFLAGS) -I$(LIBFT_DIR) -c $< -o $@
 
 clean:
-	@$(RM) src/*.o
-	@make -s -C $(LIBFT_DIR) clean
+	@$(RM) $(OBJ)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@$(RM) $(NAME)
-	@make -s -C $(LIBFT_DIR) fclean
+	@$(RM) client server
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
-re:	fclean all clean
+re:	fclean all
 
 .PHONY: all clean fclean re

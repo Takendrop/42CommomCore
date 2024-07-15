@@ -13,7 +13,7 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include "../../libft/libft.h"
+# include "../libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -55,8 +55,13 @@ void	free_stack(t_stack *stack);
 void	free_ssplit(char **ssplit);
 
 // sort
-void	sort_three(t_stack *stack_a);
+void	sort_three(t_stack *stack_a, int max_index);
 void	sort_five(t_stack *stack_a, t_stack *stack_b);
 void	radix_sort(t_stack *stack_a, t_stack *stack_b);
+
+//error
+void	put_error(void);
+int		is_nbr(char *s);
+long	ft_atol(const char *s);
 
 #endif

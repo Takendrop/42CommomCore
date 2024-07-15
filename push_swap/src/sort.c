@@ -13,16 +13,16 @@
 #include "../inc/push_swap.h"
 #include <stdio.h>
 
-void	sort_three(t_stack *stack_a)
+void	sort_three(t_stack *stack_a, int max_index)
 {
 	if (stack_a->size != 3)
 		return ;
-	if (stack_a->tail->index != 2)
+	if (stack_a->tail->index != max_index)
 	{
-		if (stack_a->head->index == 2)
+		if (stack_a->head->index == max_index)
 			rotate("ra", stack_a);
 		else
-			rrotate("ra", stack_a);
+			rrotate("rra", stack_a);
 	}
 	if (stack_a->head->index > stack_a->head->next->index)
 		swap("sa", stack_a);
@@ -30,23 +30,26 @@ void	sort_three(t_stack *stack_a)
 
 void	sort_five(t_stack *stack_a, t_stack *stack_b)
 {
+	int	max_index;
+
 	if (!(stack_a->size == 4 || stack_a->size == 5))
 		return ;
-	while (stack_a->head->index != 0)
+	max_index = stack_a->size - 1;
+	while (stack_a->size > 3)
 	{
-		if (stack_a->head->index > 3)
-		{
-			if (stack_a->head->index == 0)
-				pb(stack_a, stack_b);
-			else
-				rotate("ra", stack_a);
+		if (stack_a->head->index == 0 || stack_a->head->index == 1)
+			pb(stack_a, stack_b);
+		else
+			rotate("ra", stack_a);
 	}
-	sort_three(t_stack stack_a);
+	sort_three(stack_a, max_index);
 	if (stack_b->size == 2)
-		if (stack_b->head->index > stack_a->head->next->index)
-			swap("sa", stack_a);
-	pa(stack_a, stack_b);
-	pa(stack_a, stack_b);
+		if (stack_b->head->index > stack_b->head->next->index)
+			swap("sb", stack_b);
+	while (stack_b->size != 0)
+		pa(stack_a, stack_b);
+	if (stack_a->head->index > stack_a->head->next->index)
+		swap("sa", stack_a);
 }
 
 static int	set_max_bits(int size)
