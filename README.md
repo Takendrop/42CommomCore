@@ -1,6 +1,6 @@
 # 42CommonCore
 
-Welcome to my GitHub repository containing various projects developed during my time at the 42 Warsaw Campus. These projects are mainly written in C and C++ and showcase different aspects of programming and algorithm development learned throughout the curriculum.
+Welcome to my GitHub repository containing various projects developed during my time at the 42 Warsaw Campus. These projects are mainly written in C and showcase different aspects of programming and algorithm development learned throughout the curriculum.
 
 Additionally, you will find projects from the 42 Piscine in the `Piscine` folder. These projects are foundational exercises designed to develop programming skills in C.
 
