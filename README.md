@@ -2,8 +2,6 @@
 
 Welcome to my GitHub repository containing various projects developed during my time at the 42 Warsaw Campus. These projects are mainly written in C and showcase different aspects of programming and algorithm development learned throughout the curriculum.
 
-Additionally, you will find projects from the 42 Piscine in the `Piscine` folder. These projects are foundational exercises designed to develop programming skills in C.
-
 **Note: This repository is still under development and more projects and updates will be added over time.**
 
 ## Table of Contents
@@ -15,7 +13,6 @@ Additionally, you will find projects from the 42 Piscine in the `Piscine` folder
   - [Minitalk](#minitalk)
   - [Push_swap](#push_swap)
   - [So Long](#so-long)
-- [Piscine Projects](#piscine-projects)
 
 ## Projects
 
@@ -40,5 +37,3 @@ Additionally, you will find projects from the 42 Piscine in the `Piscine` folder
 ### So Long
 **So Long** is a simple 2D game developed using the MiniLibX library. This project introduces basic game development concepts and graphical programming.
 
-## Piscine Projects
-Projects from the 42 Piscine are located in the `Piscine` folder. These projects are essential exercises designed to build a strong foundation in programming, particularly in C. They cover a wide range of topics including algorithms, data structures, memory management, and more.
