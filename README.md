@@ -37,3 +37,10 @@ Welcome to my GitHub repository containing various projects developed during my 
 ### So Long
 **So Long** is a simple 2D game developed using the MiniLibX library. This project introduces basic game development concepts and graphical programming.
 
+## Known Issues
+
+### Cloning on Windows
+
+Currently, cloning this repository on Windows OS may not be possible due to an issue with a file name in the `piscine/shell01/ex05` directory: `\?$*'MaRViN'*$?\`. This filename contains characters that are not supported by the Windows file system.
+
+**Workaround:** I will address this issue by removing the entire `piscine` folder from the repository. Please check back later for an update on this fix.
