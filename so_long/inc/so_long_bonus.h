@@ -16,6 +16,7 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <mlx.h>
+# include <sys/time.h>
 
 # include "../libft/libft.h"
 # include "../mlx_linux/mlx.h"
@@ -24,14 +25,21 @@
 # define TILE_SIZE 32
 
 # define N_SPRITES 5
+# define N_WALK_FRAMES 8
+# define FRAME_DURATION 0.1
 
 typedef struct s_player
 {
 	int				pos[2];
 	int				moves;
+	int				cf;
+	int				is_walking;
 	int				is_facing_right;
+	struct timeval	lft;
 	void			*idle_right;
 	void			*idle_left;
+	void			*walk_right[N_WALK_FRAMES];
+	void			*walk_left[N_WALK_FRAMES];
 }	t_player;
 
 typedef struct s_so_long

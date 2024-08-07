@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/so_long.h"
+#include "../inc/so_long_bonus.h"
 
 static int	check_map(t_so_long *so_long)
 {
@@ -39,7 +39,11 @@ int	init_so_long(t_so_long *so_long)
 	so_long->p = ft_calloc(1, sizeof(t_player));
 	if (!so_long->p)
 		return (0);
+	so_long->p->moves = 0;
+	so_long->p->cf = 0;
+	so_long->p->is_walking = 0;
 	so_long->p->is_facing_right = 1;
+	gettimeofday(&so_long->p->lft, NULL);
 	so_long->map = NULL;
 	so_long->map_path = NULL;
 	so_long->c_count = 0;

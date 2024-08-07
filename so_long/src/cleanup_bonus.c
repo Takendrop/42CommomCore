@@ -10,12 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/so_long.h"
+#include "../inc/so_long_bonus.h"
 
 void	cleanup_player(t_so_long *so_long)
 {
+	int	i;
+
 	if (so_long->p)
 	{
+		i = 0;
+		while (i < N_WALK_FRAMES)
+		{
+			if (so_long->p->walk_right[i])
+			{
+				mlx_destroy_image(so_long->mlx, so_long->p->walk_right[i]);
+				so_long->p->walk_right[i] = NULL;
+			}
+			if (so_long->p->walk_left[i])
+			{
+				mlx_destroy_image(so_long->mlx, so_long->p->walk_left[i]);
+				so_long->p->walk_left[i] = NULL;
+			}
+			i++;
+		}
 		free(so_long->p);
 		so_long->p = NULL;
 	}

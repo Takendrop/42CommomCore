@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/so_long.h"
+#include "../inc/so_long_bonus.h"
 
 static void	draw_walls(t_so_long *so_long)
 {
@@ -91,18 +91,33 @@ static void	draw_player(t_so_long *so_long)
 
 	x = so_long->p->pos[0] * TILE_SIZE;
 	y = so_long->p->pos[1] * TILE_SIZE;
-	if (so_long->p->is_facing_right)
-		current = so_long->p->idle_right;
+	if (so_long->p->is_walking)
+	{
+		if (so_long->p->is_facing_right)
+			current = so_long->p->walk_right[so_long->p->cf];
+		else
+			current = so_long->p->walk_left[so_long->p->cf];
+	}
 	else
-		current = so_long->p->idle_left;
+	{
+		if (so_long->p->is_facing_right)
+			current = so_long->p->idle_right;
+		else
+			current = so_long->p->idle_left;
+	}
 	mlx_put_image_to_window(so_long->mlx, so_long->win, current, x, y);
 }
 
 void	draw_all(t_so_long *so_long)
 {
+	char	*move_count;
+
 	draw_walls(so_long);
 	draw_collectibles(so_long);
 	draw_gate(so_long);
 	draw_player(so_long);
-
+	move_count = ft_itoa(so_long->p->moves);
+	mlx_string_put(so_long->mlx, so_long->win, 10, 10, 0xFFFFFF, "Moves:");
+	mlx_string_put(so_long->mlx, so_long->win, 70, 10, 0xFFFFFF, move_count);
+	free(move_count);
 }

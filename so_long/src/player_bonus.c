@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/so_long.h"
+#include "../inc/so_long_bonus.h"
 
 static int	is_move_valid(t_so_long *so_long, int new_x, int new_y)
 {
@@ -25,10 +25,11 @@ static int	is_move_valid(t_so_long *so_long, int new_x, int new_y)
 
 static void	update_player_position(t_so_long *so_long, int new_x, int new_y)
 {
+	so_long->p->is_walking = 1;
+	gettimeofday(&so_long->p->lft, NULL);
 	so_long->p->pos[0] = new_x;
 	so_long->p->pos[1] = new_y;
 	so_long->p->moves++;
-	ft_printf("Move count: %d\n", so_long->p->moves);
 }
 
 static void	handle_collectible(t_so_long *so_long, int new_x, int new_y)
@@ -37,10 +38,6 @@ static void	handle_collectible(t_so_long *so_long, int new_x, int new_y)
 	{
 		so_long->c_total--;
 		so_long->map[new_y][new_x] = 'c';
-		if (so_long->c_total == 0)
-			ft_printf("Exit has opened\n");
-		else
-			ft_printf("Collectibles to pick up: %d\n", so_long->c_total);
 	}
 }
 
