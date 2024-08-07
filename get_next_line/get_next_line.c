@@ -31,13 +31,10 @@ char	*make_new(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (!buffer[i])
-	{
-		free(buffer);
-		return (NULL);
-	}
+		return (free(buffer), NULL);
 	res = malloc((ft_strlen(buffer) - i + 1) * sizeof(char));
 	if (!res)
-		return (NULL);
+		return (free(buffer), NULL);
 	i++;
 	j = 0;
 	while (buffer[i])
@@ -73,29 +70,29 @@ char	*make_line(char *buffer)
 	return (line);
 }
 
-char	*read_file(int fd, char *res)
+char	*read_file(int fd, char *buffer)
 {
 	int		reading;
-	char	*buffer;
+	char	*read_buffer;
 
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (NULL);
-	reading = read(fd, buffer, BUFFER_SIZE);
+	read_buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!read_buffer)
+		return (free(buffer), NULL);
+	reading = read(fd, read_buffer, BUFFER_SIZE);
 	while (reading >= 0)
 	{
-		buffer[reading] = '\0';
-		res = join_free(res, buffer);
+		read_buffer[reading] = '\0';
+		buffer = join_free(buffer, read_buffer);
 		if (!res)
-			return (free(buffer), NULL);
-		if (ft_strchr(buffer, '\n') || reading == 0)
+			return (free(read_buffer), NULL);
+		if (ft_strchr(read_buffer, '\n') || reading == 0)
 			break ;
-		reading = read(fd, buffer, BUFFER_SIZE);
+		reading = read(fd, read_buffer, BUFFER_SIZE);
 	}
-	free(buffer);
+	free(read_buffer);
 	if (reading == -1)
 		return (NULL);
-	return (res);
+	return (buffer);
 }
 
 char	*get_next_line(int fd)
@@ -116,8 +113,11 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 	line = make_line(buffer);
-	if (!line)
-		return (free(buffer), NULL);
 	buffer = make_new(buffer);
+	if (buffer && buffer[0] == '\0')
+	{
+		free(buffer);
+		buffer = NULL;
+	}
 	return (line);
 }

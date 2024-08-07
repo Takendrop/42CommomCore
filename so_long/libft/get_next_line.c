@@ -10,34 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "libft.h"
 
-char	*join_free(char *buffer, char *buf)
+char	*join_free(char *buffer, char *read_buffer)
 {
 	char	*res;
 
-	res = ft_strjoin(buffer, buf);
+	res = ft_strjoin(buffer, read_buffer);
 	free(buffer);
 	return (res);
 }
 
 char	*make_new(char *buffer)
 {
-	int		i;
-	int		j;
+	size_t		i;
+	size_t		j;
 	char	*res;
 
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (!buffer[i])
-	{
-		free(buffer);
-		return (NULL);
-	}
+		return (free(buffer), NULL);
 	res = malloc((ft_strlen(buffer) - i + 1) * sizeof(char));
 	if (!res)
-		return (NULL);
+		return (free(buffer), NULL);
 	i++;
 	j = 0;
 	while (buffer[i])
@@ -49,8 +46,8 @@ char	*make_new(char *buffer)
 
 char	*make_line(char *buffer)
 {
-	int		i;
-	int		j;
+	size_t		i;
+	size_t		j;
 	char	*line;
 
 	i = 0;
@@ -82,45 +79,45 @@ char	*read_file(int fd, char *buffer)
 	if (!read_buffer)
 		return (free(buffer), NULL);
 	reading = read(fd, read_buffer, BUFFER_SIZE);
-	while (reading >= 0)
+	while (reading > 0)
 	{
 		read_buffer[reading] = '\0';
 		buffer = join_free(buffer, read_buffer);
-		if (!res)
+		if (!buffer)
 			return (free(read_buffer), NULL);
-		if (ft_strchr(read_buffer, '\n') || reading == 0)
+		if (ft_strchr(read_buffer, '\n'))
 			break ;
 		reading = read(fd, read_buffer, BUFFER_SIZE);
 	}
 	free(read_buffer);
 	if (reading == -1)
-		return (NULL);
+		return (free(buffer), NULL);
 	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*buffer[1024];
+	static char	*buffer;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!buffer[fd])
+	if (!buffer)
 	{
-		buffer[fd] = malloc(sizeof(char));
-		if (!buffer[fd])
+		buffer = malloc(1);
+		if (!buffer)
 			return (NULL);
-		buffer[fd][0] = '\0';
+		buffer[0] = '\0';
 	}
-	buffer[fd] = read_file(fd, buffer[fd]);
-	if (!buffer[fd])
+	buffer = read_file(fd, buffer);
+	if (!buffer)
 		return (NULL);
-	line = make_line(buffer[fd]);
-	buffer[fd] = make_new(buffer[fd]);
+	line = make_line(buffer);
+	buffer = make_new(buffer);
 	if (buffer && buffer[0] == '\0')
 	{
-		free(buffer[fd]);
-		buffer[fd] = NULL;
+		free(buffer);
+		buffer = NULL;
 	}
 	return (line);
 }
