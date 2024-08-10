@@ -55,7 +55,10 @@ int	init_map(int argc, char *argv[], t_so_long *so_long)
 		return (0);
 	}
 	if (!make_path(argv[1], so_long))
+	{
+		error_msg(2);
 		return (0);
+	}
 	if (!fill_map_array(so_long))
 	{
 		error_msg(2);

@@ -104,5 +104,4 @@ void	draw_all(t_so_long *so_long)
 	draw_collectibles(so_long);
 	draw_gate(so_long);
 	draw_player(so_long);
-
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jwozniak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/23 18:37:34 by jwozniak          #+#    #+#             */
-/*   Updated: 2024/07/23 18:37:35 by jwozniak         ###   ########.fr       */
+/*   Created: 2024/08/07 20:40:23 by jwozniak          #+#    #+#             */
+/*   Updated: 2024/08/07 20:40:25 by jwozniak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ int	init_map(int argc, char *argv[], t_so_long *so_long)
 		return (0);
 	}
 	if (!make_path(argv[1], so_long))
+	{
+		error_msg(2);
 		return (0);
+	}
 	if (!fill_map_array(so_long))
 	{
 		error_msg(2);
