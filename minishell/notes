@@ -1,0 +1,32 @@
+**export**
+
+When using the export command to modify an environment variable that includes itself in its value, the minishell does not correctly expand the existing variable. Instead, it retains the literal string ${MY_VAR} rather than substituting it with the variable's current value.
+
+When running the export command to append or modify an environment variable that references itself, the minishell fails to perform the expected variable expansion. This results in the variable being set to a literal string that includes the placeholder ${MY_VAR} rather than the expanded value.
+
+STEPS TO REPRODUCE
+
+"
+	export MY_VAR="Hello"
+	export MY_VAR="${MY_VAR}World"
+	echo $MY_VAR
+"
+
+Expected output: HelloWorld
+Output: ${MY_VAR}World
+
+
+
+
+
+**ctrl-v**
+
+When pasting commands to minishell, then pressing backspace key once, interesting visual bug
+
+
+
+
+
+**echo** (but its more about quotes)
+
+when passing env var in single quotes and in double quotes (echo "'$USER'") not printing var value correctly
