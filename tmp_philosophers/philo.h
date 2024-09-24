@@ -20,33 +20,32 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+typedef struct s_program	t_program;
+
 typedef struct s_philo
 {
 	pthread_t			thread;
 	int					id;
-	int					eating;
 	int					meals_eaten;
+	int					ate_all;
 	long long			last_meal;
-	long long			time_to_die;
-	long long			time_to_eat;
-	long long			time_to_sleep;
-	long long			start_time;
-	int					num_of_philos;
-	int					num_times_to_eat;
-	int					*dead;
 	pthread_mutex_t		*r_fork;
 	pthread_mutex_t		*l_fork;
-	pthread_mutex_t		*write_lock;
-	pthread_mutex_t		*dead_lock;
-	pthread_mutex_t		*meal_lock;
+	t_program			*program;
 }	t_philo;
 
 typedef struct s_program
 {
+	int				*args;
+	int				all_ate;
 	int				dead_flag;
+	int				end_flag;
+	long long 		start_time;
 	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	end_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	write_lock;
+	pthread_mutex_t	*forks;
 	t_philo			*philos;
 }	t_program;
 
@@ -58,11 +57,11 @@ void		print_state(t_philo *philo, const char *state);
 void		think(t_philo *philo);
 void		sleep_philo(t_philo *philo);
 void		eat(t_philo *philo);
-int			has_died(t_philo *philo);
+int			is_dead(t_philo *philo);
 int			all_philosophers_ate(t_program *program);
-void		init_program(t_program *program);
-void		init_philos(t_program *program, int num_philos, long long time_to_die, long long time_to_eat, long long time_to_sleep, int num_times_to_eat);
-void		init_threads(t_program *program, int num_philos, pthread_t *threads);
-void		cleanup(t_program *program, pthread_mutex_t *forks, int num_philos);
+void		init_program(t_program *program, int argc, char **argv);
+void		init_philos(t_program *program);
+void		init_and_join_threads(t_program *program, pthread_t *threads);
+void		cleanup(t_program *program);
 
 #endif

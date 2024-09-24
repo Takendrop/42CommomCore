@@ -30,28 +30,26 @@ void	ft_usleep(long long ms)
 void print_state(t_philo *philo, const char *state)
 {
     long long		timestamp;
-    pthread_mutex_t	*write_lock;
 
-    timestamp = get_time_ms() - philo->start_time;
-    write_lock = philo->write_lock;
-    pthread_mutex_lock(write_lock);
+	pthread_mutex_lock(&philo->program->write_lock);
+    timestamp = get_time_ms() - philo->program->start_time;
     printf("%lld %d %s\n", timestamp, philo->id, state);
-    pthread_mutex_unlock(write_lock);
+    pthread_mutex_unlock(&philo->program->write_lock);
 }
 
-void	cleanup(t_program *program, pthread_mutex_t *forks, int num_philos)
+void	cleanup(t_program *program)
 {
 	int i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < program->args[0])
 	{
-		pthread_mutex_destroy(&forks[i]);
+		pthread_mutex_destroy(&program->forks[i]);
 		i++;
 	}
 	pthread_mutex_destroy(&program->write_lock);
 	pthread_mutex_destroy(&program->dead_lock);
 	pthread_mutex_destroy(&program->meal_lock);
 	free(program->philos);
-	free(forks);
+	free(program->forks);
 }

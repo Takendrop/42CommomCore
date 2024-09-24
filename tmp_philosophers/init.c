@@ -12,81 +12,88 @@
 
 #include "philo.h"
 
-void	init_program(t_program *program)
+void	init_program(t_program *program, int argc, char **argv)
 {
-	pthread_mutex_t	dead_lock;
-	pthread_mutex_t	meal_lock;
-	pthread_mutex_t	write_lock;
+	int				i;
 
-	dead_lock = program->dead_lock;
-	meal_lock = program->meal_lock;
-	write_lock = program->write_lock;
+	program->args = (int *)malloc((argc - 1) * sizeof(int));
+	if (!program->args)
+	{
+		perror("malloc");
+		exit(1);
+	}
+	i = 1;
+	while (i < argc)
+	{
+		program->args[i - 1] = atoi(argv[i]);
+		i++;
+	}
+	program->all_ate = 0;
+	program->end_flag = 0;
 	program->dead_flag = 0;
-	pthread_mutex_init(&dead_lock, NULL);
-	pthread_mutex_init(&meal_lock, NULL);
-	pthread_mutex_init(&write_lock, NULL);
-	program->dead_lock = dead_lock;
-	program->meal_lock = meal_lock;
-	program->write_lock = write_lock;
+	program->start_time = get_time_ms();
+	pthread_mutex_init(&program->end_lock, NULL);
+	pthread_mutex_init(&program->dead_lock, NULL);
+    pthread_mutex_init(&program->meal_lock, NULL);
+    pthread_mutex_init(&program->write_lock, NULL);
 }
 
-void init_philos(t_program *program, int num_philos, long long time_to_die, long long time_to_eat, long long time_to_sleep, int num_times_to_eat)
+void	init_philos(t_program *program)
 {
 	pthread_mutex_t	*forks;
 	int				i;
 
-	forks = (pthread_mutex_t *)malloc(num_philos * sizeof(pthread_mutex_t));
-	if (!forks)
-	{
-		perror("malloc");
-		exit(1);
-	}
-	program->philos = (t_philo *)malloc(num_philos * sizeof(t_philo));
-	if (!program->philos)
-	{
-		perror("malloc");
-		free(forks); // Free forks if malloc for philosophers fails
-		exit(1);
-	}
-	
-	i = 0;
-	while (i < num_philos)
-	{
-		pthread_mutex_init(&forks[i], NULL);
-		i++;
-	}
-	
-	i = 0;
-	while (i < num_philos)
-	{
-		program->philos[i].id = i + 1;
-		program->philos[i].eating = 0;
+    forks = (pthread_mutex_t *)malloc(program->args[0] * sizeof(pthread_mutex_t));
+    if (!forks)
+    {
+        perror("malloc");
+        exit(1);
+    }
+    i = 0;
+    while (i < program->args[0])
+    {
+        pthread_mutex_init(&forks[i], NULL);
+        i++;
+    }
+    program->forks = forks;
+    program->philos = (t_philo *)malloc(program->args[0] * sizeof(t_philo));
+    if (!program->philos)
+    {
+        perror("malloc");
+        exit(1);
+    }
+    i = 0;
+    while (i < program->args[0])
+    {
+        program->philos[i].id = i + 1;
+        program->philos[i].ate_all = 0;
 		program->philos[i].meals_eaten = 0;
-		program->philos[i].last_meal = get_time_ms();
-		program->philos[i].time_to_die = time_to_die;
-		program->philos[i].time_to_eat = time_to_eat;
-		program->philos[i].time_to_sleep = time_to_sleep;
-		program->philos[i].start_time = get_time_ms();
-		program->philos[i].num_of_philos = num_philos;
-		program->philos[i].num_times_to_eat = num_times_to_eat;
-		program->philos[i].dead = &program->dead_flag;
-		program->philos[i].r_fork = &forks[i];
-		program->philos[i].l_fork = &forks[(i + 1) % num_philos];
-		program->philos[i].write_lock = &program->write_lock;
-		program->philos[i].dead_lock = &program->dead_lock;
-		program->philos[i].meal_lock = &program->meal_lock;
-		i++;
-	}
+        program->philos[i].last_meal = get_time_ms();
+        program->philos[i].r_fork = &program->forks[i];
+        program->philos[i].l_fork = &program->forks[(i + 1) % program->args[0]];
+        program->philos[i].program = program;
+        i++;
+    }
 }
 
-void	init_threads(t_program *program, int num_philos, pthread_t *threads)
+void	init_and_join_threads(t_program *program, pthread_t *threads)
 {
-	int i;
+	int			i;
+	pthread_t	monitor_thread;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < program->args[0])
 	{
 		pthread_create(&threads[i], NULL, philosopher_routine, &program->philos[i]);
+		usleep(100);
 		i++;
 	}
+	pthread_create(&monitor_thread, NULL, monitor_routine, program);
+	i = 0;
+    while (i < program->args[0])
+    {
+        pthread_join(threads[i], NULL);
+        i++;
+    }
+    pthread_join(monitor_thread, NULL);
 }
